@@ -3,6 +3,7 @@
 
 A game for the FBLA 2022 game and simulation proggramming competition.
 
+
 ## Usage/Examples
 
 ```
@@ -47,6 +48,9 @@ A cave exploration game. Very replayable because it was randomly generated and a
 
 You will find elements from both of these in my game.
 
+
+
+
 ## Acknowledgements
 
 I used a lot of online art for this game. All under creative commons or similar licenses.
@@ -68,4 +72,3 @@ I used a lot of online art for this game. All under creative commons or similar 
 - https://freesound.org/people/ProjectsU012/sounds/341022/ for water sound
 
 Thanks!
-
