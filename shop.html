@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>gaming</title>
+		<style>
+			@font-face {
+				font-family: eightbit;
+				src: url('PixeloidSans-nR3g1.ttf');
+			}
+			h1 {
+				font-family: eightbit;
+			}
+			* {
+				margin: 0px;
+				border: 0px;
+			}
+
+			#stage {
+				width: 900;
+				height: 480;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			.topbar h2 {
+				color: white;
+			}
+			.topbar {
+				display: flex;
+				position: absolute;
+				left: 10px;
+				top: 5px;
+				width: 100vw;
+			}
+
+			body {
+				background-color: black;
+				overflow-y: hidden; /* Hide vertical scrollbar */
+				overflow-x: hidden; /* Hide horizontal scrollbar */
+			}
+			.buttonContainer {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			.inv {
+				width: 900;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			.inv button {
+				width: 89px;
+				height: 89px;
+				border: 1px solid orange;
+			}
+			.shopItems h1 {
+				margin-left: 10px;
+			}
+		</style>
+	</head>
+	<body>
+		<div
+			id="loadingScreen"
+			class="loadingScreen"
+			style="
+				position: absolute;
+				width: 100vw;
+				height: 100vh;
+				background: black;
+				z-index: 1;
+			"
+		>
+			<h1 style="position: absolute; top: 45vh; left: 40vw; color: white">
+				loading...
+			</h1>
+		</div>
+		<div class="topbar" id="topbar">
+			<img style="height: 60px" src="Images/heart.png" />
+			<h2 style="color: white; font-size: 60px" id="health">5</h2>
+			<div
+				id="invSlot"
+				style="
+					background-color: transparent;
+					border: 2px solid rgb(255, 255, 0);
+					width: 60px;
+					height: 60px;
+					margin-left: 10px;
+					border-radius: 3px;
+				"
+			></div>
+			<div
+				id="invSlot2"
+				style="
+					background-color: transparent;
+					border: 2px solid white;
+					width: 60px;
+					height: 60px;
+					margin-left: 10px;
+					border-radius: 3px;
+				"
+			></div>
+			<div
+				id="invSlot3"
+				style="
+					background-color: transparent;
+					border: 2px solid white;
+					width: 60px;
+					height: 60px;
+					margin-left: 10px;
+					border-radius: 3px;
+				"
+			></div>
+			<div
+				id="invSlot4"
+				style="
+					background-color: transparent;
+					border: 2px solid white;
+					width: 60px;
+					height: 60px;
+					margin-left: 10px;
+					border-radius: 3px;
+				"
+			></div>
+
+			<img src="Images/gold.png" style="width: 60px; height: 60px" />
+			<h2 id="goldcount" style="color: white; font-size: 60px">0</h2>
+			<h3
+				id="levelCount"
+				style="
+					color: white;
+
+					font-size: 30px;
+					margin-left: auto;
+					margin-right: 5vw;
+
+					order: 2;
+				"
+			>
+				level: 1
+			</h3>
+		</div>
+
+		<div id="stage">
+			<canvas
+				hidden
+				id="screen"
+				width="1800"
+				height="960"
+				style="border: solid black 5px"
+			></canvas>
+			<canvas
+				id="screen2"
+				width="900"
+				height="480"
+				style="border: solid black 1px"
+			></canvas>
+			<canvas
+				hidden
+				id="entitiesScreen"
+				width="3600"
+				height="2000"
+				style="border: solid black 5px"
+			></canvas>
+		</div>
+		<div id="deathScreen" hidden>
+			<img
+				src="Images/text.png"
+				style="
+					z-index: 10000;
+					position: absolute;
+					left: 0px;
+					top: 150px;
+					padding-left: 30%;
+					padding-right: 50%;
+					background-color: rgba(0, 0, 0, 0.5);
+				"
+			/>
+			<h3
+				style="
+					padding-left: 35%;
+					z-index: 100;
+					padding-right: 35%;
+
+					color: white;
+					position: absolute;
+					top: 290px;
+					left: 0px;
+					font-family: eightbit;
+					width: 500px;
+					background-color: rgba(0, 0, 0, 0.5);
+				"
+				hidden
+				id="hintText"
+			>
+				Press anything to return to menu...
+			</h3>
+		</div>
+		<div
+			id="storeItems"
+			class="storeItems"
+			style="
+				position: absolute;
+				display: flex;
+				color: yellow;
+				top: 50vh;
+				left: 240px;
+			"
+		>
+			<h1 id="item1" style="margin-right: 50px">$</h1>
+			<h1 id="item2" style="margin-right: 50px">$</h1>
+			<h1 id="item3" style="margin-right: 50px">$</h1>
+			<h1 id="item4" style="margin-right: 50px">$</h1>
+		</div>
+		<div
+			id="chatbox"
+			style="
+				display: flex;
+				position: absolute;
+				top: 75vh;
+				left: 0;
+				background-color: rgba(0, 0, 0, 0.5);
+				padding-right: 100vw;
+			"
+			hidden
+			inherit
+		>
+			<!-- <img
+				src="Images/player.png"
+				style="width: 80px; height: 80px; padding-left: 5vw"
+			/> -->
+			<h2 style="color: white; font-family: eightbit; width: 100vw">
+				press down + Q to buy something
+			</h2>
+		</div>
+		<div id="buttonContainer" class="buttonContainer"></div>
+		<script src="data.js"></script>
+		<script>
+			var chat = function (text, time) {
+				let children = document.getElementById('chatbox').children;
+				for (var i = 0; i < children.length; i++) {
+					children[i].hidden = false;
+				}
+				children[0].innerHTML = text;
+				setTimeout(function () {
+					for (var i = 0; i < children.length; i++) {
+						children[i].hidden = true;
+					}
+				}, time);
+			};
+
+			var input = {};
+			var coiny = new Audio('music/coin.wav');
+			player.health = window.localStorage.health;
+			document.getElementById('health').innerHTML = player.health;
+
+			var gold = 0;
+			var selected = 3.5;
+
+			gold = window.localStorage.gold;
+			document.getElementById('goldcount').innerHTML = gold;
+
+			var setInvImages = function () {
+				//sets the inventory images to match what they are
+				document.getElementById('invSlot').innerHTML =
+					'<img style="width:60px;height:60px;" src = "' +
+					images[player.inventory[0].image].src +
+					'" />';
+				document.getElementById('invSlot2').innerHTML =
+					'<img style="width:60px;height:60px;" src = "' +
+					images[player.inventory[1].image].src +
+					'" />';
+				document.getElementById('invSlot3').innerHTML =
+					'<img style="width:60px;height:60px;" src = "' +
+					images[player.inventory[2].image].src +
+					'" />';
+
+				document.getElementById('invSlot4').innerHTML =
+					'<img style="width:60px;height:60px;" src = "' +
+					images[player.inventory[3].image].src +
+					'" />';
+			};
+
+			// // alert('making starter');
+			// player.inventory = [items[1], items[3], items[0], items[0]];
+			// window.localStorage.inventory = '';
+
+			// for (var i = 0; i < player.inventory.length; i++) {
+			// 	if (i != 0) {
+			// 		window.localStorage.inventory += ',';
+			// 	}
+			// 	window.localStorage.inventory += player.inventory[i].toolNum;
+			// }
+
+			let s = window.localStorage.inventory.split(',');
+			player.inventory = [items[s[0]], items[s[1]], items[s[2]], items[s[3]]];
+			setInvImages();
+
+			var damageMultiplier = 1; //how much damage is took per hit
+			var dmgCooldown = 0;
+			var won = false;
+
+			player.takeDamage = function (amount) {
+				amount = amount || 1;
+				if (dmgCooldown < 0 && damageMultiplier > 0) {
+					dmgCooldown = 130;
+					player.health -= damageMultiplier * amount;
+					document.getElementById('health').innerHTML = player.health;
+					player.image = 7;
+					hurtSound.play();
+				}
+				if (player.health <= 0) {
+					setInterval(function () {
+						player.image = 7;
+					}, 100);
+					player.image = 7;
+					document.removeEventListener('keydown', keydown);
+					document.getElementById('deathScreen').hidden = false;
+					music.pause();
+					setTimeout(function () {
+						document.getElementById('hintText').hidden = false;
+						document.addEventListener('keydown', function () {
+							window.location = 'start.html';
+						});
+						//window.location = 'start.html';
+					}, 3000);
+				}
+			};
+
+			player.iSelected = 0;
+
+			document.addEventListener('keyup', function (e) {
+				if (e.key === 'Escape') {
+					window.close();
+				}
+				input[e.key] = false;
+			});
+
+			let keydown = function (e) {
+				if (e.key === 'Escape') {
+					window.close();
+				}
+				if (e.key == 'q') {
+					if (!input.s) {
+						player.iSelected++;
+						if (player.iSelected > 3) {
+							player.iSelected = 0;
+						}
+						document.getElementById('invSlot').style.border =
+							player.iSelected == 0 ? '2px solid yellow' : '2px solid white';
+						document.getElementById('invSlot2').style.border =
+							player.iSelected == 1 ? '2px solid yellow' : '2px solid white';
+						document.getElementById('invSlot3').style.border =
+							player.iSelected == 2 ? '2px solid yellow' : '2px solid white';
+						document.getElementById('invSlot4').style.border =
+							player.iSelected == 3 ? '2px solid yellow' : '2px solid white';
+					} else {
+						//drop or pick up item
+						if (player.inventory[player.iSelected].name != 'nothing') {
+							//drop
+							entities.push({
+								name: player.inventory[player.iSelected].name,
+								image: player.inventory[player.iSelected].image,
+								x: player.x,
+								toolNum: player.inventory[player.iSelected].toolNum,
+								render: true,
+								y: player.y,
+								width: 5,
+								flipped: 1,
+								height: 5,
+								xVel: player.flipped ? -2 : 2,
+								yVel: 3,
+								physicsOff: false,
+							});
+
+							player.inventory[player.iSelected] = items[0];
+						} else {
+							//pickUp
+							for (var j = 0; j < entities.length; j++) {
+								if (entities[j].toolNum && !entities[j].shopItem) {
+									if (Math.abs(entities[j].x - entities[0].x) < 6) {
+										if (Math.abs(entities[j].y - entities[0].y) < 6) {
+											player.inventory[player.iSelected] =
+												items[entities[j].toolNum];
+											entities.splice(j, 1);
+											j = entities.length + 2;
+										}
+									}
+								} else if (entities[j].shopItem) {
+									if (
+										Math.abs(entities[j].x - entities[0].x) < 6 &&
+										entities[j].price <= gold
+									) {
+										if (Math.abs(entities[j].y - entities[0].y) < 6) {
+											chat(
+												'You bought the ' + items[entities[j].toolNum].name,
+												1000
+											);
+											coiny.play();
+											player.inventory[player.iSelected] =
+												items[entities[j].toolNum];
+											gold -= entities[j].price;
+											entities.splice(j, 1);
+											j = entities.length + 2;
+											document.getElementById('goldcount').innerHTML = gold;
+										}
+									}
+								}
+							}
+						}
+
+						setInvImages();
+					}
+				}
+				if (e.key === 'e') {
+					player.inventory[player.iSelected].use();
+				}
+				input[e.key] = true;
+			};
+
+			document.addEventListener('keydown', keydown);
+
+			// var mouseDown = 0;
+			// document.body.onmousedown = function () {
+			// 	mouseDown++;
+			// };
+			// document.body.onmouseup = function () {
+			// 	--mouseDown;
+			// };
+
+			// var getMousePosition = function (canvas, event) {
+			// 	var rect = canvas.getBoundingClientRect();
+			// 	mousex = event.clientX - rect.left;
+			// 	mousey = event.clientY - rect.top;
+			// };
+
+			// canvasTwo.addEventListener('mousemove', function (e) {
+			// 	getMousePosition(canvasTwo, e);
+			// });
+
+			// function myFunction(elem) {
+			// 	var button = document.createElement('button');
+			// 	button.innerHTML = pProps[elem].name;
+			// 	button.onclick = function () {
+			// 		selected = elem + pProps[elem].radiates + 0.5;
+			// 		return false;
+			// 	};
+			// 	document.getElementById('buttonContainer').appendChild(button);
+			// }
+
+			// // MAKES ELEMENT BUTTONS
+			// for (var i = 0; i < pProps.length; i++) {
+			// 	myFunction(i);
+			// }
+
+			let stepCharacter = function () {
+				dmgCooldown--;
+
+				// if (mouseDown) {
+				// 	var mpoa = positionToArrayPos(
+				// 		mousex / (900 / frame.width) + frame.x,
+				// 		mousey / (480 / frame.height) + frame.y,
+				// 		particles,
+				// 		1
+				// 	);
+				// 	if (particles[mpoa[0]][mpoa[1]]) {
+				// 		particles[mpoa[0]][mpoa[1]] = selected;
+
+				// 		renderPix(mpoa[0], mpoa[1]);
+				// 	}
+				// }
+				// entities[0].x = entities[2].x;
+				// entities[0].y = entities[2].y;
+				if (input.w && player.touchingGround) {
+					if (Math.abs(player.x - entities[2].x) < 10) {
+						if (Math.abs(player.y - entities[2].y) < 10) {
+							console.log('win');
+
+							if (!won) {
+								won = true;
+								window.localStorage.inventory = '';
+								window.localStorage.levelHighscore =
+									window.localStorage.levelHighscore > window.localStorage.level
+										? window.localStorage.levelHighscore
+										: window.localStorage.level;
+								for (var i = 0; i < player.inventory.length; i++) {
+									if (i != 0) {
+										window.localStorage.inventory += ',';
+									}
+									window.localStorage.inventory += player.inventory[i].toolNum;
+								}
+								window.localStorage.health = player.health;
+								window.localStorage.gold = gold;
+								player.render = false;
+								document.removeEventListener('keydown', keydown);
+								damageCooldown = -1; //turns off the flashing from taking damage
+								damageMultiplier = 0;
+								entities[2].image = 14;
+								// window.localStorage.level++;
+								for (let j = 1; j < 6; j++) {
+									setTimeout(function () {
+										entities[2].image = 14 + j;
+										player.render = false;
+									}, 300 + j * 200);
+									if (j == 5) {
+										setTimeout(function () {
+											entities[2].image = 11;
+											player.render = false;
+											setTimeout(function () {
+												window.location = 'index.html';
+											}, 500);
+										}, 300 + (j + 1) * 200);
+									}
+								}
+								oneUpSound.play();
+							}
+						} else {
+							player.yVel = -3.0;
+						}
+					} else {
+						player.yVel = -3.0;
+					}
+				}
+				if (input.a) {
+					player.xVel = -1;
+					player.image = 1;
+					player.flipped = true;
+				}
+				if (input.s) {
+					player.yVel += 0.1;
+				}
+				if (input.d) {
+					player.xVel = 1;
+					player.image = 0;
+					player.flipped = false;
+				}
+
+				try {
+					let start = Math.floor(player.x + 1);
+					let end = player.x + player.width - 2;
+					let h = Math.floor(player.y + player.height);
+					for (var i = 0; i < end - start + 1; i++) {
+						if (Math.floor(particles[h][start + i]) == 2) {
+							goldSound.play();
+							particles[h][start + i] = 1.5;
+							renderPix(h, start + i);
+							gold++;
+							document.getElementById('goldcount').innerHTML = gold;
+						}
+						if (particles[h - 1][start + 1] % 1 > 0.7 && dmgCooldown < 0) {
+							player.takeDamage();
+						}
+					}
+
+					start = Math.floor(player.x + 1);
+					end = player.x + player.width - 2;
+					h = Math.floor(player.y);
+					for (var i = 0; i < end - start + 1; i++) {
+						if (Math.floor(particles[h][start + i]) == 2) {
+							particles[h][start + i] = 1.5;
+							renderPix(h, start + i);
+							gold++;
+							document.getElementById('goldcount').innerHTML = gold;
+							goldSound.play();
+						}
+						if (particles[h + 1][start + 1] % 1 > 0.7 && dmgCooldown < 0) {
+							player.takeDamage();
+						}
+					}
+
+					start = Math.floor(player.y + 1);
+					end = player.y + player.height - 1;
+					h = Math.floor(player.x + player.width - 1);
+					for (var i = 0; i < end - start + 1; i++) {
+						if (Math.floor(particles[start + i][h]) == 2) {
+							particles[start + i][h] = 1.5;
+							renderPix(start + i, h);
+							gold++;
+							goldSound.play();
+							document.getElementById('goldcount').innerHTML = gold;
+						}
+						if (particles[start + 1][h - 1] % 1 > 0.7 && dmgCooldown < 0) {
+							player.takeDamage();
+						}
+					}
+
+					start = Math.floor(player.y + 1);
+					end = player.y + player.height - 1;
+					h = Math.floor(player.x);
+					for (var i = 0; i < end - start + 1; i++) {
+						if (Math.floor(particles[start + i][h]) == 2) {
+							particles[start + i][h] = 1.5;
+							renderPix(start + i, h);
+							gold++;
+							goldSound.play();
+							document.getElementById('goldcount').innerHTML = gold;
+						}
+						if (particles[start + 1][h + 1] % 1 > 0.7 && dmgCooldown < 0) {
+							player.takeDamage();
+						}
+					}
+
+					if (dmgCooldown > 0) {
+						if (dmgCooldown % 5 == 0 && damageMultiplier > 0) {
+							player.render = false;
+						} else {
+							player.render = true;
+						}
+					}
+				} catch (err) {
+					alert(err);
+				}
+			};
+		</script>
+		<script src="game.js"></script>
+
+		<script src="generator.js"></script>
+		<script>
+			//This will be the main js that utilizes all the classes to run the game
+			// made by trevor blythe
+			// canvas widht and height will aslways be 900 by 480
+
+			//at the start of the shop load decide what items to display.
+			let song = new Audio('music/nice.mp3');
+			entities.push({
+				name: 'downStairs',
+				image: 11,
+				x: 130,
+				render: true,
+				y: 50,
+				width: 10,
+				gravityOff: false,
+				flipped: 1,
+				height: 10,
+				yVel: 0,
+				xVel: 0,
+				touchingGround: true,
+			});
+			entities.push({
+				name: 'shop text',
+				x: 60,
+				y: 10,
+				width: 30,
+				render: true,
+				height: 15,
+				physicsOff: true,
+				image: 31,
+				takeDamage: () => {},
+			});
+			var pickedItems = [];
+			for (var i = 0; i < 4; i++) {
+				let r = Math.floor(Math.random() * items.length);
+				if (items[r].unlocked < window.localStorage.level) {
+					pickedItems.push(r);
+					document.getElementById('item' + (i + 1)).innerHTML =
+						'$' + items[r].price;
+					entities.push({
+						name: items[r].name,
+						image: items[r].image,
+						x: 20 + 20 * (i + 1),
+						toolNum: items[r].toolNum,
+						shopItem: r,
+						price: items[r].price,
+						render: true,
+						y: 50,
+						width: 10,
+						flipped: 1,
+						height: 10,
+						xVel: 0,
+						yVel: 3,
+						physicsOff: false,
+					});
+				} else {
+					i--;
+				}
+			}
+
+			document.getElementById('levelCount').innerHTML =
+				'level: ' + window.localStorage.level;
+
+			var mapWidth = 150;
+			var mapHeight = 70;
+
+			generate(mapWidth, mapHeight, 19.5);
+
+			for (var i = 3; i < 20; i++) {
+				for (var j = 3; j < 20; j++) {
+					particles[i][j] = 1;
+				}
+			}
+
+			for (var i = 10; i < 60; i++) {
+				for (var j = 20; j < 130 - 20; j++) {
+					particles[i][j] = 1;
+				}
+			}
+
+			for (var i = 49; i < 60; i++) {
+				for (var j = 130 - 20; j < 140; j++) {
+					particles[i][j] = 1;
+				}
+			}
+
+			const times = [];
+			let fps;
+
+			var renderPix = function (i, j) {
+				var part = Math.abs(particles[i][j]);
+				var particle = pProps[Math.floor(part)];
+				if (particle.texture) {
+					canvasOneGraphics.drawImage(
+						images[particle.texture],
+						(i % (particle.resx / particle.scale)) * particle.scale,
+						(j % (particle.resy / particle.scale)) * particle.scale,
+						particle.scale,
+						particle.scale,
+						j * 2,
+						i * 2,
+						2,
+						2
+					);
+				} else {
+					var heat = (part - Math.floor(part) - 0.5) * 300;
+
+					canvasOneGraphics.fillStyle = `rgb(${particle.color[0] + heat},${
+						particle.color[1] - heat
+					},${particle.color[2] - heat})`;
+					// canvasOneGraphics.fillStyle = `rgb(${particle.color[0]},${particle.color[1]},${particle.color[2]})`;
+					canvasOneGraphics.fillRect(j * 2, i * 2, 2, 2);
+				}
+			};
+
+			var renderEntity = function (entity) {
+				if (entity.render) {
+					canvasThreeGraphics.drawImage(
+						images[entity.image],
+						entity.x * 4,
+						entity.y * 4,
+						entity.width * 4,
+						entity.height * 4
+					);
+				}
+			};
+
+			var fullRender = function () {
+				for (var i = 0; i < particles.length; i++) {
+					for (var j = 0; j < particles[i].length; j++) {
+						if (particles[i][j] !== 0) {
+							renderPix(i, j);
+						} else {
+							canvasOneGraphics.fillStyle = 'black';
+							canvasOneGraphics.fillRect(j * 2, i * 2, 2, 2);
+						}
+					}
+				}
+				renderEntity(entities[0]);
+			};
+
+			window.onload = function () {
+				song.play();
+				fullRender();
+				chat('A shop. I should press down + Q to buy something!', 2000);
+				document.getElementById('loadingScreen').hidden = true;
+				gameloop = setInterval(function () {
+					/********
+					 * GAME LOOP
+					 * GameLOOp
+					 *
+					 *
+					 *
+					 */
+					stepParticles(
+						particles,
+						Math.max(Math.floor(frame.x), 0),
+						Math.max(Math.floor(frame.y), 0),
+						Math.min(Math.floor(frame.x) + frame.width + 10, mapWidth - 2),
+						Math.min(Math.floor(frame.y) + frame.height + 10, mapHeight - 2)
+					);
+					stepEntitiesPhysics(
+						Math.max(frame.x, 0),
+						Math.max(frame.y, 0),
+						frame.x + frame.width,
+						frame.y + frame.height
+					);
+					canvasTwoGraphics.drawImage(
+						canvasOne,
+						frame.x * 2,
+						frame.y * 2,
+						frame.width * 2,
+						frame.height * 2,
+						0,
+						0,
+						900,
+						480
+					);
+					canvasTwoGraphics.drawImage(
+						canvasThree,
+						frame.x * 4,
+						frame.y * 4,
+						frame.width * 4,
+						frame.height * 4,
+						0,
+						0,
+						900,
+						480
+					);
+					stepCharacter();
+					// stepSnakes();
+					// eyesStep();
+					// bitersStep();
+					// frame.x = Math.min(
+					// 	Math.max(0, lerp(frame.x, entities[0].x - 75, 0.1)),
+					// 	mapWidth - frame.width
+					// );
+					// frame.y = Math.min(
+					// 	Math.max(lerp(frame.y, entities[0].y - 40, 0.1), 0),
+					// 	mapHeight - frame.height
+					// );
+					// const now = performance.now();
+					// while (times.length > 0 && times[0] <= now - 1000) {
+					// 	times.shift();
+					// }
+					// times.push(now);
+					// fps = times.length;
+					// if (Math.random() < 0.01) {
+					// 	console.log(fps);
+					// }
+				}, 16);
+			};
+		</script>
+	</body>
+</html>
