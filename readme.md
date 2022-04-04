@@ -1,6 +1,51 @@
+
 # Cave master
 
 A game for the FBLA 2022 game and simulation proggramming competition.
+
+## Usage/Examples
+
+```
+./dist/game
+
+```
+
+OR double click the file.
+
+
+#### To build
+```
+npm run build
+
+```
+## Tech Stack
+
+Node, Electron, Electron-Builder
+
+## Why I chose Javascript
+
+- Javascript is easy and fast.
+- I am familiar with it.
+- Based on the mechanics of the game Javascript is probably the best option 
+
+
+## About the game.
+
+A very simple game similar to a game you would find in 
+old arcade machines. Simple concept to go down and reach 
+the highest level you can get. Lots of enemies biomes and items
+to explore within.
+
+## Inspiration.
+
+- Noita
+This game is amazing and was a main inspiration. Its similar to my game where every particle is simulated. This is a cool concept.
+
+- Spelunky
+A cave exploration game. Very replayable because it was randomly generated and addictive.
+
+
+You will find elements from both of these in my game.
 
 ## Acknowledgements
 
@@ -24,16 +69,3 @@ I used a lot of online art for this game. All under creative commons or similar 
 
 Thanks!
 
-## Usage/Examples
-
-```
-./dist/game
-
-```
-
-#### To build
-
-```
-npm run build
-
-```
